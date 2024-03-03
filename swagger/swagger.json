@@ -1,0 +1,18 @@
+{
+    "schemes": [
+        "http"
+    ],
+    "swagger": "2.0",
+    "info": {
+        "description": "This is bivi backend API.",
+        "title": "bivi API",
+        "contact": {
+            "name": "API Support",
+            "email": "andreysapozhkov535@gmail.com"
+        },
+        "version": "0.1.0"
+    },
+    "host": "localhost:8080",
+    "basePath": "/api/v1",
+    "paths": {}
+}
