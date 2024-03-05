@@ -14,21 +14,28 @@ import (
 	"syscall"
 )
 
+type WebApp interface {
+	Start(port string) error
+	Shutdown(ctx context.Context) error
+}
+
 func readConfig() error {
 	var configPath string
+
 	pflag.StringVarP(&configPath, "config", "c", "", "Config file path")
 	pflag.Parse()
+
 	if configPath == "" {
 		return errors.New("config file is not specified")
 	}
-	slog.Info(fmt.Sprintf("Config path: %s", configPath))
 
+	slog.Info("Config path: " + configPath)
 	viper.SetConfigFile(configPath)
 
-	return viper.ReadInConfig()
+	return errors.Wrap(viper.ReadInConfig(), "read configuration")
 }
 
-func runApp(webApp app.WebApp, port string, logger *slog.Logger) {
+func runApp(webApp WebApp, port string, logger *slog.Logger) {
 	logger.Debug(fmt.Sprintf("web app starts at port %s with configuration: \n%v",
 		port, viper.AllSettings()),
 	)
@@ -41,8 +48,8 @@ func runApp(webApp app.WebApp, port string, logger *slog.Logger) {
 	}()
 }
 
-func shutdownApp(webApp app.WebApp, logger *slog.Logger) {
-	quit := make(chan os.Signal)
+func shutdownApp(webApp WebApp, logger *slog.Logger) {
+	quit := make(chan os.Signal, 1)
 	// kill (no param) default send syscall.SIGTERM
 	// kill -2 is syscall.SIGINT
 	// kill -9 is syscall.SIGKILL but can't be caught, so don't need to add it
@@ -50,10 +57,11 @@ func shutdownApp(webApp app.WebApp, logger *slog.Logger) {
 	<-quit
 	logger.Debug("shutdown web app ...")
 
-	err := webApp.Stop(context.Background())
+	err := webApp.Shutdown(context.Background())
 	if err != nil {
 		panic(errors.Wrap(err, "app shutdown"))
 	}
+
 	logger.Debug("web app exited")
 }
 
@@ -81,9 +89,9 @@ func main() {
 
 	// setup dependencies
 
-	settings := app.ApiSettings{
+	settings := app.APISettings{
 		Port:      viper.GetString("APP_PORT"),
-		ApiPrefix: viper.GetString("API_PREFIX"),
+		APIPrefix: viper.GetString("API_PREFIX"),
 	}
 
 	webApp := app.NewFiberApp(settings, logger)

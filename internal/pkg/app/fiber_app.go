@@ -3,26 +3,27 @@ package app
 import (
 	"context"
 	"fmt"
-	swagger "github.com/arsmn/fiber-swagger/v2"
+	swagger "github.com/arsmn/fiber-swagger/v2" // TODO: replace with "github.com/gofiber/swagger"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/gofiber/fiber/v2/middleware/requestid"
-	_ "gitlab.teamdev.huds.su/bivi/backend/swagger"
+	"github.com/pkg/errors"
+	_ "gitlab.teamdev.huds.su/bivi/backend/swagger" // include generated swagger documentation
 	"log/slog"
 )
 
-type fiberApp struct {
+type FiberApp struct {
 	fiber  *fiber.App
 	logger *slog.Logger
 }
 
-type ApiSettings struct {
+type APISettings struct {
 	Port      string
-	ApiPrefix string
+	APIPrefix string
 }
 
-func NewFiberApp(settings ApiSettings, log *slog.Logger) WebApp {
+func NewFiberApp(settings APISettings, log *slog.Logger) *FiberApp {
 	app := fiber.New()
 
 	app.Use(recover.New())
@@ -40,16 +41,16 @@ func NewFiberApp(settings ApiSettings, log *slog.Logger) WebApp {
 
 	// setup delivery
 
-	return &fiberApp{
+	return &FiberApp{
 		fiber:  app,
 		logger: log,
 	}
 }
 
-func (f *fiberApp) Start(port string) error {
-	return f.fiber.Listen(":" + port)
+func (f *FiberApp) Start(port string) error {
+	return errors.Wrap(f.fiber.Listen(":"+port), "start application")
 }
 
-func (f *fiberApp) Stop(ctx context.Context) error {
-	return f.fiber.ShutdownWithContext(ctx)
+func (f *FiberApp) Shutdown(ctx context.Context) error {
+	return errors.Wrap(f.fiber.ShutdownWithContext(ctx), "stop application")
 }
