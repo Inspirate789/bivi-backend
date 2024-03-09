@@ -10,6 +10,7 @@ import (
 	"gitlab.teamdev.huds.su/bivi/backend/internal/pkg/app"
 	"log/slog"
 	"os"
+	"os/exec"
 	"os/signal"
 	"syscall"
 )
@@ -33,6 +34,16 @@ func readConfig() error {
 	viper.SetConfigFile(configPath)
 
 	return errors.Wrap(viper.ReadInConfig(), "read configuration")
+}
+
+func checkFFmpeg() error {
+	output, err := exec.Command("ffmpeg", "-version").Output()
+	if err != nil {
+		return err
+	}
+	fmt.Println(string(output))
+
+	return nil
 }
 
 func runApp(webApp WebApp, port string, logger *slog.Logger) {
@@ -88,6 +99,11 @@ func main() {
 	}))
 
 	// setup dependencies
+
+	err = checkFFmpeg()
+	if err != nil {
+		panic(err)
+	}
 
 	settings := app.APISettings{
 		Port:      viper.GetString("APP_PORT"),

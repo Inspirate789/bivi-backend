@@ -2,21 +2,30 @@
 
 [Правила кодирования](docs/CODING_RULES.md)
 
-## Локальный запуск
+## Запуск приложения
+#### Локально
 ```shell
 go build -o app cmd/app/main.go
 ./app -c env/app.env
 ```
+#### В Docker
+```shell
+make docker-app # ARCH=arm64 if you use arm-based Mac
+docker run --name bivi-backend -d -p 8080:8080 bivi/backend:local
+```
 
-## Запуск в Docker
-
-TODO
-
-## Локальный запуск тестов
-
-TODO
+## Запуск тестов
+#### Локально
+```shell
+./scripts/integration-test.sh
+```
+#### В Docker
+```shell
+make docker-integration-test # ARCH=arm64 if you use arm-based Mac
+```
 
 ## Запуск линтера
+#### Локально
 Установка:
 ```shell
 curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.56.2```
@@ -25,10 +34,14 @@ curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/insta
 ```shell
 golangci-lint run
 ```
+#### В Docker
+```shell
+make docker-lint # ARCH=arm64 if you use arm-based Mac
+```
 
 ## Документация к API
 
-Адрес документации Swagger запущенного приложения: http://localhost:8080/swagger/index.html
+Путь к документации Swagger запущенного приложения: /swagger/index.html
 
 ### Генерация документации
 Установка:

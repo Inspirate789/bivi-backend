@@ -3,7 +3,7 @@ package app
 import (
 	"context"
 	"fmt"
-	swagger "github.com/arsmn/fiber-swagger/v2" // TODO: replace with "github.com/gofiber/swagger"
+	swagger "github.com/arsmn/fiber-swagger/v2" // replace with "github.com/gofiber/swagger" ?
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/recover"
