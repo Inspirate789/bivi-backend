@@ -2,15 +2,18 @@ package app
 
 import (
 	"context"
-	"fmt"
 	swagger "github.com/arsmn/fiber-swagger/v2" // replace with "github.com/gofiber/swagger" ?
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/compress"
 	"github.com/gofiber/fiber/v2/middleware/logger"
+	"github.com/gofiber/fiber/v2/middleware/monitor"
+	"github.com/gofiber/fiber/v2/middleware/pprof"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/gofiber/fiber/v2/middleware/requestid"
 	"github.com/pkg/errors"
 	_ "gitlab.teamdev.huds.su/bivi/backend/swagger" // include generated swagger documentation
 	"log/slog"
+	"time"
 )
 
 type FiberApp struct {
@@ -19,27 +22,35 @@ type FiberApp struct {
 }
 
 type APISettings struct {
-	Port      string
-	APIPrefix string
+	Port        string
+	ContentPath string
 }
 
 func NewFiberApp(settings APISettings, log *slog.Logger) *FiberApp {
 	app := fiber.New()
+	staticApp := fiber.New()
+	app.Mount("/", staticApp)
 
 	app.Use(recover.New())
 	app.Use(requestid.New())
-	app.Use(logger.New(logger.Config{
-		Format: "${pid} ${locals:requestid} ${status} - ${latency} ${method} ${path}\n",
-		Output: slog.NewLogLogger(log.Handler(), slog.LevelDebug).Writer(),
-	}))
+	app.Use(logger.New())
+
+	app.Get("/metrics", monitor.New(monitor.Config{Title: "bivi metrics page"}))
+	app.Use(pprof.New())
 
 	app.Get("/swagger/*", swagger.New(swagger.Config{
-		URL:          fmt.Sprintf("http://localhost:%s/swagger/doc.json", settings.Port),
 		DeepLinking:  false,
 		DocExpansion: "none",
 	}))
 
-	// setup delivery
+	staticApp.Use(compress.New(compress.Config{Level: compress.LevelBestSpeed}))
+	staticApp.Static("/", settings.ContentPath, fiber.Static{
+		Compress:      true,
+		CacheDuration: -1 * time.Second,
+	})
+
+	_ = app.Group("/api/v1")
+	// TODO: setup delivery
 
 	return &FiberApp{
 		fiber:  app,

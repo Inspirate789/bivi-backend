@@ -23,7 +23,7 @@ type WebApp interface {
 func readConfig() error {
 	var configPath string
 
-	pflag.StringVarP(&configPath, "config", "c", "", "Config file path")
+	pflag.StringVarP(&configPath, "config", "c", "env/app.local.env", "Config file path")
 	pflag.Parse()
 
 	if configPath == "" {
@@ -81,7 +81,6 @@ func shutdownApp(webApp WebApp, logger *slog.Logger) {
 //	@description	This is bivi backend API.
 //	@contact.name	API Support
 //	@contact.email	andreysapozhkov535@gmail.com
-//	@host			localhost:8080
 //	@BasePath		/api/v1
 //	@Schemes		http
 func main() {
@@ -106,8 +105,8 @@ func main() {
 	}
 
 	settings := app.APISettings{
-		Port:      viper.GetString("APP_PORT"),
-		APIPrefix: viper.GetString("API_PREFIX"),
+		Port:        viper.GetString("APP_PORT"),
+		ContentPath: viper.GetString("CONTENT_PATH"),
 	}
 
 	webApp := app.NewFiberApp(settings, logger)

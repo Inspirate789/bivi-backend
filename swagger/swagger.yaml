@@ -1,5 +1,4 @@
 basePath: /api/v1
-host: localhost:8080
 info:
   contact:
     email: andreysapozhkov535@gmail.com

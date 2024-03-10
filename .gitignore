@@ -6,6 +6,9 @@ app
 *.so
 *.dylib
 
+# Media content
+content/*
+
 # Test binary, built with `go test -c`
 *.test
 

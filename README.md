@@ -5,13 +5,17 @@
 ## Запуск приложения
 #### Локально
 ```shell
+# Без указания кастомного конфига
+go run ./cmd/app/main.go
+
+# С кастомным конфигом
 go build -o app cmd/app/main.go
-./app -c env/app.env
+./app -c env/app.local.env
 ```
 #### В Docker
 ```shell
 make docker-app # ARCH=arm64 if you use arm-based Mac
-docker run --name bivi-backend -d -p 8080:8080 bivi/backend:local
+docker run --name bivi-backend -d -p 8080:80 -v ./content:/content bivi/backend:local
 ```
 
 ## Запуск тестов

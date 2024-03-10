@@ -21,6 +21,7 @@ go.work
 # Other
 *.md
 docs/*
+content/*
 .git*
 .golangci.yml
 makefile
