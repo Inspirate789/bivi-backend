@@ -1,22 +1,23 @@
+---
 run:
   timeout: 5m
 linters:
   enable-all: true
   disable:
-    - deadcode # Deprecated
+    - deadcode          # Deprecated
     - depguard
-    - exhaustivestruct # Deprecated
+    - exhaustivestruct  # Deprecated
     - exhaustruct
     - gci
     - godot
     - gofmt
     - gofumpt
     - goimports
-    - golint # Deprecated
-    - ifshort # Deprecated
-    - interfacer # Deprecated
-    - maligned # Deprecated
-    - nosnakecase # Deprecated
-    - scopelint # Deprecated
-    - structcheck # Deprecated
-    - varcheck # Deprecated
+    - golint            # Deprecated
+    - ifshort           # Deprecated
+    - interfacer        # Deprecated
+    - maligned          # Deprecated
+    - nosnakecase       # Deprecated
+    - scopelint         # Deprecated
+    - structcheck       # Deprecated
+    - varcheck          # Deprecated

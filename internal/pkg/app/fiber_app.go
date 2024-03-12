@@ -50,7 +50,7 @@ func NewFiberApp(settings APISettings, log *slog.Logger) *FiberApp {
 	})
 
 	_ = app.Group("/api/v1")
-	// TODO: setup delivery
+	// setup delivery
 
 	return &FiberApp{
 		fiber:  app,

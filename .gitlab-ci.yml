@@ -1,0 +1,71 @@
+---
+image: docker:25.0.4-dind
+
+variables:
+  DOCKER_DRIVER: overlay2
+  DOCKER_HOST: tcp://docker:2375
+  DOCKER_TLS_CERTDIR: ""
+  NO_PROXY: "gitlab.teamdev.huds.su"
+
+services:
+  - name: docker:25.0.4-dind
+    command: ["--tls=false"]
+
+# before_script:
+#   - docker info
+
+stages:
+  - build
+  - test
+  - deploy
+  - clean
+
+build-job:
+  stage: build
+  when: always
+  script:
+    - docker build . --target build --platform linux/amd64 -t bivi/backend:build
+
+lint-job:
+  stage: test
+  when: always
+  script:
+    - docker build . --target lint --platform linux/amd64 -t bivi/backend:lint
+
+.allure-reports:
+  before_script:
+    - rm -rf $(pwd)/test-reports/*
+    - mkdir -p $(pwd)/test-reports
+    - export ALLURE_OUTPUT_PATH=$(pwd)/test-reports
+  artifacts:
+    paths:
+      - test-reports
+    expire_in: 30 days
+
+integration-test-job:
+  stage: test
+  when: always
+  needs:
+    - build-job
+  extends: .allure-reports
+  script:
+    - docker build . --target integration-test --platform linux/amd64 -t bivi/backend:integration-test
+
+build-image-job:
+  stage: deploy
+  when: manual
+  needs:
+    - lint-job
+    - integration-test-job
+  extends: .allure-reports
+  script:
+    - docker build . --target app --platform linux/amd64 -t bivi/backend:0.1.0  # TODO: tag from GitLab variables
+
+clean-images-job:
+  stage: clean
+  when: manual
+  needs:
+    - build-image-job
+  script:
+    - docker image rm -f bivi/backend:build bivi/backend:lint bivi/backend:integration-test
+    - docker image ls

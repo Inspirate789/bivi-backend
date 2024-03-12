@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"fmt"
-	_ "github.com/lib/pq"
 	"github.com/pkg/errors"
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
@@ -36,12 +35,13 @@ func readConfig() error {
 	return errors.Wrap(viper.ReadInConfig(), "read configuration")
 }
 
-func checkFFmpeg() error {
+func checkFFmpeg(logger *slog.Logger) error {
 	output, err := exec.Command("ffmpeg", "-version").Output()
 	if err != nil {
-		return err
+		return errors.Wrap(err, "checking FFmpeg version")
 	}
-	fmt.Println(string(output))
+
+	logger.Info(string(output))
 
 	return nil
 }
@@ -76,30 +76,27 @@ func shutdownApp(webApp WebApp, logger *slog.Logger) {
 	logger.Debug("web app exited")
 }
 
-//	@title			bivi API
-//	@version		0.1.0
-//	@description	This is bivi backend API.
-//	@contact.name	API Support
-//	@contact.email	andreysapozhkov535@gmail.com
-//	@BasePath		/api/v1
-//	@Schemes		http
+// @title			bivi API
+// @version		0.1.0
+// @description	This is bivi backend API.
+// @contact.name	API Support
+// @contact.email	andreysapozhkov535@gmail.com
+// @BasePath		/api/v1
+// @Schemes		http
 func main() {
 	err := readConfig()
 	if err != nil {
 		panic(err)
 	}
 
-	logLevel := new(slog.LevelVar)
-	logLevel.Set(slog.LevelDebug)
 	logger := slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{
-		AddSource:   true,
-		Level:       logLevel.Level(),
-		ReplaceAttr: nil,
+		AddSource: true,
+		Level:     slog.LevelDebug,
 	}))
 
 	// setup dependencies
 
-	err = checkFFmpeg()
+	err = checkFFmpeg(logger)
 	if err != nil {
 		panic(err)
 	}
