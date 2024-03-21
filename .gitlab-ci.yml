@@ -17,7 +17,7 @@ services:
 stages:
   - build
   - test
-  - deploy
+  - delivery
   - clean
 
 build-job:
@@ -52,14 +52,24 @@ integration-test-job:
     - docker build . --target integration-test --platform linux/amd64 -t bivi/backend:integration-test
 
 build-image-job:
-  stage: deploy
+  stage: delivery
   when: manual
   needs:
     - lint-job
     - integration-test-job
-  extends: .allure-reports
   script:
-    - docker build . --target app --platform linux/amd64 -t bivi/backend:0.1.0  # TODO: tag from GitLab variables
+    - docker build . --target app --platform linux/amd64 -t $CI_REGISTRY/bivi/backend:$CI_COMMIT_SHORT_SHA
+
+push-image-job:
+  stage: delivery
+  when: manual
+  needs:
+    - build-image-job
+  script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker images
+    - docker push $CI_REGISTRY/bivi/backend:$CI_COMMIT_SHORT_SHA
+    - docker logout
 
 clean-images-job:
   stage: clean
