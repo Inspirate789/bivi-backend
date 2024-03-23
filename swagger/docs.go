@@ -18,7 +18,98 @@ const docTemplate = `{
     },
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
-    "paths": {}
+    "paths": {
+        "/client/logs": {
+            "post": {
+                "description": "upload client logs",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Client API"
+                ],
+                "summary": "Upload client logs.",
+                "parameters": [
+                    {
+                        "type": "file",
+                        "description": "Body with log file",
+                        "name": "logs",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "413": {
+                        "description": "Request Entity Too Large",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/streams": {
+            "get": {
+                "description": "get stream descriptions",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Stream API"
+                ],
+                "summary": "Get stream descriptions.",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/streams/qualities": {
+            "get": {
+                "description": "get stream qualities",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Stream API"
+                ],
+                "summary": "Get stream qualities.",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        }
+    }
 }`
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it

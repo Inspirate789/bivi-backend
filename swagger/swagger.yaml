@@ -6,7 +6,66 @@ info:
   description: This is bivi backend API.
   title: bivi API
   version: 0.1.0
-paths: {}
+paths:
+  /client/logs:
+    post:
+      consumes:
+      - application/json
+      description: upload client logs
+      parameters:
+      - description: Body with log file
+        in: formData
+        name: logs
+        required: true
+        type: file
+      responses:
+        "200":
+          description: OK
+        "413":
+          description: Request Entity Too Large
+          schema:
+            type: string
+        "422":
+          description: Unprocessable Entity
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Upload client logs.
+      tags:
+      - Client API
+  /streams:
+    get:
+      consumes:
+      - application/json
+      description: get stream descriptions
+      responses:
+        "200":
+          description: OK
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Get stream descriptions.
+      tags:
+      - Stream API
+  /streams/qualities:
+    get:
+      consumes:
+      - application/json
+      description: get stream qualities
+      responses:
+        "200":
+          description: OK
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Get stream qualities.
+      tags:
+      - Stream API
 schemes:
 - http
 swagger: "2.0"

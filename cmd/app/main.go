@@ -7,6 +7,7 @@ import (
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
 	"gitlab.teamdev.huds.su/bivi/backend/internal/pkg/app"
+	"gitlab.teamdev.huds.su/bivi/backend/internal/stream/usecase"
 	"log/slog"
 	"os"
 	"os/exec"
@@ -22,7 +23,7 @@ type WebApp interface {
 func readConfig() error {
 	var configPath string
 
-	pflag.StringVarP(&configPath, "config", "c", "env/app.local.env", "Config file path")
+	pflag.StringVarP(&configPath, "config", "c", "env/app.local.yaml", "Config file path")
 	pflag.Parse()
 
 	if configPath == "" {
@@ -76,13 +77,13 @@ func shutdownApp(webApp WebApp, logger *slog.Logger) {
 	logger.Debug("web app exited")
 }
 
-// @title			bivi API
-// @version		0.1.0
-// @description	This is bivi backend API.
-// @contact.name	API Support
-// @contact.email	andreysapozhkov535@gmail.com
-// @BasePath		/api/v1
-// @Schemes		http
+//	@title			bivi API
+//	@version		0.1.0
+//	@description	This is bivi backend API.
+//	@contact.name	API Support
+//	@contact.email	andreysapozhkov535@gmail.com
+//	@BasePath		/api/v1
+//	@Schemes		http
 func main() {
 	err := readConfig()
 	if err != nil {
@@ -94,7 +95,7 @@ func main() {
 		Level:     slog.LevelDebug,
 	}))
 
-	// setup dependencies
+	streamUseCase := usecase.NewUseCase(logger)
 
 	err = checkFFmpeg(logger)
 	if err != nil {
@@ -102,11 +103,12 @@ func main() {
 	}
 
 	settings := app.APISettings{
-		Port:        viper.GetString("APP_PORT"),
-		ContentPath: viper.GetString("CONTENT_PATH"),
+		Port:                viper.GetString("port"),
+		ContentPath:         viper.GetString("content_path"),
+		ClientLogPath:       viper.GetString("client_log_path"),
+		UploadFilesizeLimit: viper.GetInt64("upload_filesize_limit"),
 	}
-
-	webApp := app.NewFiberApp(settings, logger)
+	webApp := app.NewFiberApp(settings, streamUseCase, logger)
 
 	runApp(webApp, settings.Port, logger)
 	shutdownApp(webApp, logger)

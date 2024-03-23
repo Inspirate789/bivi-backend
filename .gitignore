@@ -8,6 +8,7 @@ app
 
 # Media content
 content/*
+logs/*
 
 # Test binary, built with `go test -c`
 *.test

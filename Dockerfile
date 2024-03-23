@@ -39,6 +39,6 @@ COPY --from=build /app /app
 # Copy Swagger documentation
 COPY ./swagger/swagger.* ./swagger
 # Create environment
-COPY env/app.docker.env /
+COPY env/app.docker.yaml /
 # Run the binary
 ENTRYPOINT ["/app", "--config=/app.docker.env"]
