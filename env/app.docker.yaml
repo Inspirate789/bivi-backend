@@ -1,18 +1,22 @@
 ---
 port: 80
-content_path: /content # TODO: move?
 client_log_path: /logs
 upload_filesize_limit: 5242880  # 5MB
 streams:
   # https://bitmovin.com/video-bitrate-streaming-hls-dash
   # https://ask.ivi.ru/knowledge-bases/10/articles/41545-kakie-parametryi-video-i-audio-u-kazhdogo-tipa-video-shq-hq
   qualities:
-    - width: 1920
-      height: 1080
-      preferredPeakBitRate: 8400000
-    - width: 1280
-      height: 720
-      preferredPeakBitRate: 4200000
     - width: 640
       height: 360
       preferredPeakBitRate: 1400000
+    - width: 1280
+      height: 720
+      preferredPeakBitRate: 4200000
+    - width: 1920
+      height: 1080
+      preferredPeakBitRate: 8400000
+  content_route: /content
+  content_path: /content
+  filenames:
+    preview: preview.png
+    playlist: playlist.m3u8

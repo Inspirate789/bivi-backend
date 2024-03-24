@@ -2,6 +2,9 @@ package delivery
 
 import "gitlab.teamdev.huds.su/bivi/backend/internal/models"
 
-type UseCase interface {
+type InfoUseCase interface {
 	GetStreamsInfo() ([]models.StreamDescription, error)
+}
+
+type Streamer interface {
 }

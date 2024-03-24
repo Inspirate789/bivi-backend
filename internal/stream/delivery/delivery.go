@@ -8,11 +8,11 @@ import (
 )
 
 type delivery struct {
-	useCase UseCase
+	useCase InfoUseCase
 	logger  *slog.Logger
 }
 
-func NewDelivery(api fiber.Router, useCase UseCase, logger *slog.Logger) {
+func NewDelivery(api fiber.Router, useCase InfoUseCase, logger *slog.Logger) {
 	handler := &delivery{
 		useCase: useCase,
 		logger:  logger,

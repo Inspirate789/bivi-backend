@@ -24,12 +24,18 @@ type FiberApp struct {
 
 type APISettings struct {
 	Port                string
+	ContentRoute        string
 	ContentPath         string
 	ClientLogPath       string
 	UploadFilesizeLimit int64
 }
 
-func NewFiberApp(settings APISettings, streamUseCase streamDelivery.UseCase, logger *slog.Logger) *FiberApp {
+func NewFiberApp(
+	settings APISettings,
+	streamUseCase streamDelivery.InfoUseCase,
+	streamer streamDelivery.Streamer,
+	logger *slog.Logger,
+) *FiberApp {
 	app := fiber.New()
 	app.Use(recover.New())
 	app.Use(fiberLogger.New())
@@ -45,9 +51,9 @@ func NewFiberApp(settings APISettings, streamUseCase streamDelivery.UseCase, log
 		DocExpansion: "none",
 	}))
 
-	staticApp.Use(streamDelivery.StaticHandler(streamUseCase, logger))
+	staticApp.Use(settings.ContentRoute, streamDelivery.StaticHandler(settings.ContentRoute, streamer, logger))
 	staticApp.Use(compress.New(compress.Config{Level: compress.LevelBestSpeed}))
-	staticApp.Static("/", settings.ContentPath, fiber.Static{
+	staticApp.Static(settings.ContentRoute, settings.ContentPath, fiber.Static{
 		Compress:      true,
 		CacheDuration: -1 * time.Second, // disable cache
 	})
