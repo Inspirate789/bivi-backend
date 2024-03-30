@@ -25,12 +25,14 @@ build-job:
   when: always
   script:
     - docker build . --target build --platform linux/amd64 -t bivi/backend:build
+    - docker image rm -f bivi/backend:build
 
 lint-job:
   stage: test
   when: always
   script:
     - docker build . --target lint --platform linux/amd64 -t bivi/backend:lint
+    - docker image rm -f bivi/backend:lint
 
 .allure-reports:
   before_script:
@@ -50,6 +52,7 @@ integration-test-job:
   extends: .allure-reports
   script:
     - docker build . --target integration-test --platform linux/amd64 -t bivi/backend:integration-test
+    - docker image rm -f bivi/backend:integration-test
 
 build-image-job:
   stage: delivery
@@ -67,15 +70,13 @@ push-image-job:
     - build-image-job
   script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker images
-    - docker push $CI_REGISTRY/bivi/backend:$CI_COMMIT_SHORT_SHA
     - docker logout
 
-clean-images-job:
+clean-image-job:
   stage: clean
   when: manual
   needs:
     - build-image-job
   script:
-    - docker image rm -f bivi/backend:build bivi/backend:lint bivi/backend:integration-test
-    - docker image ls
+    - docker image rm -f $CI_REGISTRY/bivi/backend:$CI_COMMIT_SHORT_SHA
+    - docker images
