@@ -1,5 +1,7 @@
 ---
 port: 80
+debug: false
+api_prefix: /api/v1
 client_log_path: /logs
 upload_filesize_limit: 5242880  # 5MB
 streams:

@@ -44,22 +44,25 @@ lint-job:
       - test-reports
     expire_in: 30 days
 
-integration-test-job:
+e2e-test-job:
   stage: test
   when: always
   needs:
     - build-job
   extends: .allure-reports
   script:
-    - docker build . --target integration-test --platform linux/amd64 -t bivi/backend:integration-test
-    - docker image rm -f bivi/backend:integration-test
+    - docker build . --target e2e-test --platform linux/amd64 -t bivi/backend:e2e-test
+    - docker create --name extract bivi/backend:e2e-test
+    - docker cp extract:/test-reports .
+    - docker rm extract
+    - docker image rm -f bivi/backend:e2e-test
 
 build-image-job:
   stage: delivery
   when: manual
   needs:
     - lint-job
-    - integration-test-job
+    - e2e-test-job
   script:
     - docker build . --target app --platform linux/amd64 -t $CI_REGISTRY/bivi/backend:$CI_COMMIT_SHORT_SHA
 
@@ -70,6 +73,8 @@ push-image-job:
     - build-image-job
   script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker images
+    - docker push $CI_REGISTRY/bivi/backend:$CI_COMMIT_SHORT_SHA
     - docker logout
 
 clean-image-job:

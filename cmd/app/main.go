@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/base64"
 	"fmt"
 	"github.com/pkg/errors"
 	"github.com/spf13/pflag"
@@ -11,7 +12,6 @@ import (
 	"gitlab.teamdev.huds.su/bivi/backend/internal/stream/usecase"
 	"log/slog"
 	"os"
-	"os/exec"
 	"os/signal"
 	"syscall"
 )
@@ -37,21 +37,8 @@ func readConfig() error {
 	return errors.Wrap(viper.ReadInConfig(), "read configuration")
 }
 
-func checkFFmpeg(logger *slog.Logger) error {
-	output, err := exec.Command("ffmpeg", "-version").Output()
-	if err != nil {
-		return errors.Wrap(err, "checking FFmpeg version")
-	}
-
-	logger.Info(string(output))
-
-	return nil
-}
-
 func runApp(webApp WebApp, port string, logger *slog.Logger) {
-	logger.Debug(fmt.Sprintf("web app starts at port %s with configuration: \n%v",
-		port, viper.AllSettings()),
-	)
+	logger.Debug(fmt.Sprintf("web app starts at port %s with configuration: \n%v", port, viper.AllSettings()))
 
 	go func() {
 		err := webApp.Start(port)
@@ -78,13 +65,13 @@ func shutdownApp(webApp WebApp, logger *slog.Logger) {
 	logger.Debug("web app exited")
 }
 
-// @title			bivi API
-// @version		0.1.0
-// @description	This is bivi backend API.
-// @contact.name	API Support
-// @contact.email	andreysapozhkov535@gmail.com
-// @BasePath		/api/v1
-// @Schemes		http
+//	@title			bivi API
+//	@version		0.1.0
+//	@description	This is bivi backend API.
+//	@contact.name	API Support
+//	@contact.email	andreysapozhkov535@gmail.com
+//	@BasePath		/api/v1
+//	@Schemes		http
 func main() {
 	err := readConfig()
 	if err != nil {
@@ -92,26 +79,24 @@ func main() {
 	}
 
 	logger := slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{
-		AddSource: true,
+		AddSource: viper.GetBool("debug"),
 		Level:     slog.LevelDebug,
 	}))
 
+	contentRoute := viper.GetString("streams.content_route")
 	streamRepository := repository.NewRepository(viper.GetString("streams.content_path"), logger)
-	streamUseCase := usecase.NewUseCase(streamRepository, logger)
-
-	err = checkFFmpeg(logger)
-	if err != nil {
-		panic(err)
-	}
+	streamNameEncoder := base64.StdEncoding
+	streamUseCase := usecase.NewUseCase(contentRoute, streamRepository, streamNameEncoder, logger)
 
 	settings := app.APISettings{
+		Prefix:              viper.GetString("api_prefix"),
 		Port:                viper.GetString("port"),
-		ContentRoute:        viper.GetString("streams.content_route"),
+		ContentRoute:        contentRoute,
 		ContentPath:         viper.GetString("streams.content_path"),
 		ClientLogPath:       viper.GetString("client_log_path"),
 		UploadFilesizeLimit: viper.GetInt64("upload_filesize_limit"),
 	}
-	webApp := app.NewFiberApp(settings, streamUseCase, nil, logger)
+	webApp := app.NewFiberApp(settings, streamUseCase, streamNameEncoder, logger)
 
 	runApp(webApp, settings.Port, logger)
 	shutdownApp(webApp, logger)

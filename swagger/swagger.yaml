@@ -24,15 +24,21 @@ paths:
         "413":
           description: Request Entity Too Large
           schema:
-            type: string
+            additionalProperties:
+              type: string
+            type: object
         "422":
           description: Unprocessable Entity
           schema:
-            type: string
+            additionalProperties:
+              type: string
+            type: object
         "500":
           description: Internal Server Error
           schema:
-            type: string
+            additionalProperties:
+              type: string
+            type: object
       summary: Upload client logs.
       tags:
       - Client API
@@ -47,7 +53,9 @@ paths:
         "500":
           description: Internal Server Error
           schema:
-            type: string
+            additionalProperties:
+              type: string
+            type: object
       summary: Get stream descriptions.
       tags:
       - Stream API
@@ -62,7 +70,9 @@ paths:
         "500":
           description: Internal Server Error
           schema:
-            type: string
+            additionalProperties:
+              type: string
+            type: object
       summary: Get stream qualities.
       tags:
       - Stream API

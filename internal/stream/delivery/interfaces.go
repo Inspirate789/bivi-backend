@@ -6,5 +6,6 @@ type InfoUseCase interface {
 	GetStreamsInfo() ([]models.StreamDescription, error)
 }
 
-type Streamer interface {
+type StreamNameDecoder interface {
+	DecodeString(s string) ([]byte, error)
 }

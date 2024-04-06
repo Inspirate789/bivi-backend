@@ -1,5 +1,5 @@
 ---
-port: 8080
+port: 6080
 debug: true
 api_prefix: /api/v1
 client_log_path: logs
@@ -18,7 +18,9 @@ streams:
       height: 1080
       preferredPeakBitRate: 8400000
   content_route: /content
-  content_path: content
+  content_path: test/data
   filenames:
     preview: preview.png
     playlist: playlist.m3u8
+test:
+  request_timeout_ms: 100

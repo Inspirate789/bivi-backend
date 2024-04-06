@@ -194,6 +194,10 @@ github.com/otiai10/curr v0.0.0-20150429015615-9b4961190c95/go.mod h1:9qAhocn7zKJ
 github.com/otiai10/curr v1.0.0/go.mod h1:LskTG5wDwr8Rs+nNQ+1LlxRjAtTZZjtJW4rMXl6j4vs=
 github.com/otiai10/mint v1.3.0/go.mod h1:F5AjcsTsWUqX+Na9fpHb52P8pcRX2CI6A3ctIT91xUo=
 github.com/otiai10/mint v1.3.3/go.mod h1:/yxELlJQ0ufhjUwhshSj+wFjZ78CnZ48/1wtmBH1OTc=
+github.com/ozontech/allure-go/pkg/allure v0.6.12 h1:O9VTf7fW9q/c9qKidQ3CGRCXBC4c8MR7NZW+oVm7Uz4=
+github.com/ozontech/allure-go/pkg/allure v0.6.12/go.mod h1:4oEG2yq+DGOzJS/ZjPc87C/mx3tAnlYpYonk77Ru/vQ=
+github.com/ozontech/allure-go/pkg/framework v0.6.29 h1:RzOXLMEg/O1K8+mqbKtorqqmlmEYtq94H4XH7aSvn14=
+github.com/ozontech/allure-go/pkg/framework v0.6.29/go.mod h1:ZNUnhean4TKmDwHPX2Jwr3y/o0WTeyuXB9aKKRcyHBg=
 github.com/pelletier/go-toml/v2 v2.0.8 h1:0ctb6s9mE31h0/lhu+J6OPmVeDxJn+kYnJc2jZR9tGQ=
 github.com/pelletier/go-toml/v2 v2.0.8/go.mod h1:vuYfssBdrU2XDZ9bYydBu6t+6a6PYNcZljzZR9VXg+4=
 github.com/pkg/errors v0.9.1 h1:FEBLx1zS214owpjy7qsBeixbURkuhQAwrK5UwLGTwt4=

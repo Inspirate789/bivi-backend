@@ -1,6 +1,8 @@
 ---
 run:
   timeout: 5m
+  skip-dirs:
+    - content
 linters:
   enable-all: true
   disable:
@@ -25,3 +27,6 @@ linters:
 linters-settings:
   nlreturn:
     block-size: 2
+  varnamelen:
+    ignore-decls:
+      - t provider.T

@@ -14,18 +14,22 @@ go build -o app cmd/app/main.go
 ```
 #### В Docker
 ```shell
-make docker-app # ARCH=arm64 if you use arm-based Mac
+make docker-app # ARCH=arm64 if you use arm-based PC
 docker run --name bivi-backend -d -p 8080:80 -v ./content:/content -v ./logs:/logs bivi/backend:local
 ```
 
 ## Запуск тестов
 #### Локально
 ```shell
-./scripts/integration-test.sh
+./scripts/e2e-test.sh # Использует конфиг app.test.yaml
+```
+Посмотреть отчёты allure:
+```shell
+allure serve test-reports/allure-results
 ```
 #### В Docker
 ```shell
-make docker-integration-test # ARCH=arm64 if you use arm-based Mac
+make docker-e2e-test # ARCH=arm64 if you use arm-based PC
 ```
 
 ## Запуск линтера
@@ -40,7 +44,7 @@ golangci-lint run
 ```
 #### В Docker
 ```shell
-make docker-lint # ARCH=arm64 if you use arm-based Mac
+make docker-lint # ARCH=arm64 if you use arm-based PC
 ```
 
 ## Документация к API

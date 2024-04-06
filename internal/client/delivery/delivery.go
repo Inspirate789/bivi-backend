@@ -29,9 +29,9 @@ func NewDelivery(api fiber.Router, logPath string, uploadFilesizeLimit int64, lo
 //	@Param			logs	formData	file	true	"Body with log file"
 //	@Accept			json
 //	@Success		200
-//	@Failure		413	{object}	string
-//	@Failure		422	{object}	string
-//	@Failure		500	{object}	string
+//	@Failure		413	{object}	map[string]string
+//	@Failure		422	{object}	map[string]string
+//	@Failure		500	{object}	map[string]string
 //	@Router			/client/logs [post]
 func (d *delivery) postLogs(ctx *fiber.Ctx) error {
 	file, err := ctx.FormFile("logs")

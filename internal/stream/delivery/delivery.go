@@ -28,7 +28,7 @@ func NewDelivery(api fiber.Router, useCase InfoUseCase, logger *slog.Logger) {
 //	@Tags			Stream API
 //	@Accept			json
 //	@Success		200
-//	@Failure		500	{object}	string
+//	@Failure		500	{object}	map[string]string
 //	@Router			/streams/qualities [get]
 func (d *delivery) getQualities(ctx *fiber.Ctx) error {
 	var qualities []models.StreamQuality
@@ -57,7 +57,7 @@ func (d *delivery) getQualities(ctx *fiber.Ctx) error {
 //	@Tags			Stream API
 //	@Accept			json
 //	@Success		200
-//	@Failure		500	{object}	string
+//	@Failure		500	{object}	map[string]string
 //	@Router			/streams [get]
 func (d *delivery) getStreamsInfo(ctx *fiber.Ctx) error {
 	streams, err := d.useCase.GetStreamsInfo()

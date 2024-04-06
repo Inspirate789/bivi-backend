@@ -10,6 +10,9 @@ app
 content/*
 logs/*
 
+# Test reports
+test-reports/*
+
 # Test binary, built with `go test -c`
 *.test
 

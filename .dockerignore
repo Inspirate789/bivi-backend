@@ -23,5 +23,6 @@ go.work
 docs/*
 content/*
 logs/*
+test-reports/*
 .git*
 makefile

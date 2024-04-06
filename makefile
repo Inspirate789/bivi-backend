@@ -1,5 +1,5 @@
 all: docker-app
-test: docker-build docker-integration-test docker-lint
+test: docker-build docker-e2e-test docker-lint
 
 ARCH=amd64
 TAG=local
@@ -12,9 +12,12 @@ docker-app:
 docker-build:
 	@docker build . --target build --platform linux/${ARCH} -t bivi/backend:build
 
-.PHONY: docker-integration-test
-docker-integration-test:
-	@docker build . --target integration-test --platform linux/${ARCH} -t bivi/backend:integration-test
+.PHONY: docker-e2e-test
+docker-e2e-test:
+	@docker build . --target e2e-test --platform linux/${ARCH} -t bivi/backend:e2e-test
+	@docker create --name extract bivi/backend:e2e-test
+	@docker cp extract:/test-reports .
+	@docker rm extract
 
 .PHONY: docker-lint
 docker-lint:

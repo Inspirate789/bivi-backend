@@ -15,11 +15,11 @@ RUN --mount=target=. \
     -trimpath -ldflags "-s -w -extldflags '-static'" \
     -o /app ./cmd/app/main.go
 
-# Run the integration tests (a script that uses go commands)
-FROM base AS integration-test
-RUN --mount=target=. \
+# Run the E2E tests (a script that uses go commands)
+FROM base AS e2e-test
+RUN --mount=target=.,readwrite \
     --mount=type=cache,target=/root/.cache/go-build \
-    ./scripts/integration-test.sh
+    ./scripts/e2e-test.sh docker
 
 FROM base AS lint
 # Run the linter
@@ -31,9 +31,7 @@ RUN --mount=target=. \
     --mount=type=cache,target=/root/.cache/golangci-lint \
     golangci-lint run
 
-FROM debian:bookworm-slim AS app
-# Install ffmpeg
-RUN apt -y update && apt -y upgrade && apt install -y ffmpeg
+FROM scratch AS app
 # Copy the binary
 COPY --from=build /app /app
 # Copy Swagger documentation
