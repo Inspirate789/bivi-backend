@@ -38,7 +38,7 @@ func (uc *UseCase) GetStreamsInfo() ([]models.StreamDescription, error) {
 	descriptions := make([]models.StreamDescription, 0, len(names))
 
 	for _, name := range names {
-		encodedName := base64.StdEncoding.EncodeToString([]byte(name))
+		encodedName := base64.URLEncoding.EncodeToString([]byte(name))
 		descriptions = append(descriptions, models.StreamDescription{
 			Name:         name,
 			PreviewPath:  uc.contentRoute + "/" + filepath.Join(encodedName, viper.GetString("streams.filenames.preview")),

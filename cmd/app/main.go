@@ -85,7 +85,7 @@ func main() {
 
 	contentRoute := viper.GetString("streams.content_route")
 	streamRepository := repository.NewRepository(viper.GetString("streams.content_path"), logger)
-	streamNameEncoder := base64.StdEncoding
+	streamNameEncoder := base64.URLEncoding
 	streamUseCase := usecase.NewUseCase(contentRoute, streamRepository, streamNameEncoder, logger)
 
 	settings := app.APISettings{
