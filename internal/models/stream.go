@@ -8,7 +8,7 @@ type StreamQuality struct {
 }
 
 type StreamDescription struct {
-	Name         string `json:"name,omitempty"`
-	PreviewPath  string `json:"previewPath,omitempty"`
-	PlaylistPath string `json:"playlistPath,omitempty"`
+	Name         string `example:"San Francisco"                               json:"name,omitempty"`
+	PreviewPath  string `example:"/content/U2FuIEZyYW5jaXNjbw==/preview.png"   json:"previewPath,omitempty"`
+	PlaylistPath string `example:"/content/U2FuIEZyYW5jaXNjbw==/playlist.m3u8" json:"playlistPath,omitempty"`
 }

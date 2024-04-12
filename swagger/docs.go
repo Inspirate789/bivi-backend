@@ -21,7 +21,6 @@ const docTemplate = `{
     "paths": {
         "/client/logs": {
             "post": {
-                "description": "upload client logs",
                 "consumes": [
                     "application/json"
                 ],
@@ -40,33 +39,24 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK"
+                        "description": "Log file saved"
                     },
                     "413": {
-                        "description": "Request Entity Too Large",
+                        "description": "Request file size is more than 5Mb",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
+                            "$ref": "#/definitions/gitlab_teamdev_huds_su_bivi_backend_internal_pkg_app_errors.FiberError"
                         }
                     },
                     "422": {
-                        "description": "Unprocessable Entity",
+                        "description": "Cannot get Multipart form file from request",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
+                            "$ref": "#/definitions/gitlab_teamdev_huds_su_bivi_backend_internal_pkg_app_errors.FiberError"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
+                            "$ref": "#/definitions/gitlab_teamdev_huds_su_bivi_backend_internal_pkg_app_errors.FiberError"
                         }
                     }
                 }
@@ -74,7 +64,6 @@ const docTemplate = `{
         },
         "/streams": {
             "get": {
-                "description": "get stream descriptions",
                 "consumes": [
                     "application/json"
                 ],
@@ -84,15 +73,15 @@ const docTemplate = `{
                 "summary": "Get stream descriptions.",
                 "responses": {
                     "200": {
-                        "description": "OK"
+                        "description": "List of available streams",
+                        "schema": {
+                            "$ref": "#/definitions/internal_stream_delivery.StreamsInfo"
+                        }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
+                            "$ref": "#/definitions/gitlab_teamdev_huds_su_bivi_backend_internal_pkg_app_errors.FiberError"
                         }
                     }
                 }
@@ -100,7 +89,6 @@ const docTemplate = `{
         },
         "/streams/qualities": {
             "get": {
-                "description": "get stream qualities",
                 "consumes": [
                     "application/json"
                 ],
@@ -110,16 +98,78 @@ const docTemplate = `{
                 "summary": "Get stream qualities.",
                 "responses": {
                     "200": {
-                        "description": "OK"
+                        "description": "List of available stream qualities",
+                        "schema": {
+                            "$ref": "#/definitions/internal_stream_delivery.QualitiesDTO"
+                        }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
+                            "$ref": "#/definitions/gitlab_teamdev_huds_su_bivi_backend_internal_pkg_app_errors.FiberError"
                         }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "gitlab_teamdev_huds_su_bivi_backend_internal_models.StreamDescription": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "example": "San Francisco"
+                },
+                "playlistPath": {
+                    "type": "string",
+                    "example": "/content/U2FuIEZyYW5jaXNjbw==/playlist.m3u8"
+                },
+                "previewPath": {
+                    "type": "string",
+                    "example": "/content/U2FuIEZyYW5jaXNjbw==/preview.png"
+                }
+            }
+        },
+        "gitlab_teamdev_huds_su_bivi_backend_internal_pkg_app_errors.FiberError": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string"
+                }
+            }
+        },
+        "internal_stream_delivery.QualitiesDTO": {
+            "type": "object",
+            "properties": {
+                "qualities": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/internal_stream_delivery.QualityDTO"
+                    }
+                }
+            }
+        },
+        "internal_stream_delivery.QualityDTO": {
+            "type": "object",
+            "properties": {
+                "height": {
+                    "type": "integer",
+                    "example": 720
+                },
+                "preferredPeakBitRate": {
+                    "type": "integer",
+                    "example": 4200000
+                }
+            }
+        },
+        "internal_stream_delivery.StreamsInfo": {
+            "type": "object",
+            "properties": {
+                "streams": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/gitlab_teamdev_huds_su_bivi_backend_internal_models.StreamDescription"
                     }
                 }
             }

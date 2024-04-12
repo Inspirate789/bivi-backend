@@ -1,4 +1,45 @@
 basePath: /api/v1
+definitions:
+  gitlab_teamdev_huds_su_bivi_backend_internal_models.StreamDescription:
+    properties:
+      name:
+        example: San Francisco
+        type: string
+      playlistPath:
+        example: /content/U2FuIEZyYW5jaXNjbw==/playlist.m3u8
+        type: string
+      previewPath:
+        example: /content/U2FuIEZyYW5jaXNjbw==/preview.png
+        type: string
+    type: object
+  gitlab_teamdev_huds_su_bivi_backend_internal_pkg_app_errors.FiberError:
+    properties:
+      error:
+        type: string
+    type: object
+  internal_stream_delivery.QualitiesDTO:
+    properties:
+      qualities:
+        items:
+          $ref: '#/definitions/internal_stream_delivery.QualityDTO'
+        type: array
+    type: object
+  internal_stream_delivery.QualityDTO:
+    properties:
+      height:
+        example: 720
+        type: integer
+      preferredPeakBitRate:
+        example: 4200000
+        type: integer
+    type: object
+  internal_stream_delivery.StreamsInfo:
+    properties:
+      streams:
+        items:
+          $ref: '#/definitions/gitlab_teamdev_huds_su_bivi_backend_internal_models.StreamDescription'
+        type: array
+    type: object
 info:
   contact:
     email: andreysapozhkov535@gmail.com
@@ -11,7 +52,6 @@ paths:
     post:
       consumes:
       - application/json
-      description: upload client logs
       parameters:
       - description: Body with log file
         in: formData
@@ -20,25 +60,19 @@ paths:
         type: file
       responses:
         "200":
-          description: OK
+          description: Log file saved
         "413":
-          description: Request Entity Too Large
+          description: Request file size is more than 5Mb
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/gitlab_teamdev_huds_su_bivi_backend_internal_pkg_app_errors.FiberError'
         "422":
-          description: Unprocessable Entity
+          description: Cannot get Multipart form file from request
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/gitlab_teamdev_huds_su_bivi_backend_internal_pkg_app_errors.FiberError'
         "500":
           description: Internal Server Error
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/gitlab_teamdev_huds_su_bivi_backend_internal_pkg_app_errors.FiberError'
       summary: Upload client logs.
       tags:
       - Client API
@@ -46,16 +80,15 @@ paths:
     get:
       consumes:
       - application/json
-      description: get stream descriptions
       responses:
         "200":
-          description: OK
+          description: List of available streams
+          schema:
+            $ref: '#/definitions/internal_stream_delivery.StreamsInfo'
         "500":
           description: Internal Server Error
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/gitlab_teamdev_huds_su_bivi_backend_internal_pkg_app_errors.FiberError'
       summary: Get stream descriptions.
       tags:
       - Stream API
@@ -63,16 +96,15 @@ paths:
     get:
       consumes:
       - application/json
-      description: get stream qualities
       responses:
         "200":
-          description: OK
+          description: List of available stream qualities
+          schema:
+            $ref: '#/definitions/internal_stream_delivery.QualitiesDTO'
         "500":
           description: Internal Server Error
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/gitlab_teamdev_huds_su_bivi_backend_internal_pkg_app_errors.FiberError'
       summary: Get stream qualities.
       tags:
       - Stream API

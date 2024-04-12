@@ -4,6 +4,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/spf13/viper"
 	"gitlab.teamdev.huds.su/bivi/backend/internal/models"
+	"gitlab.teamdev.huds.su/bivi/backend/internal/pkg/app/errors"
 	"log/slog"
 )
 
@@ -23,20 +24,19 @@ func NewDelivery(api fiber.Router, useCase InfoUseCase, logger *slog.Logger) {
 
 // getQualities godoc
 //
-//	@Summary		Get stream qualities.
-//	@Description	get stream qualities
-//	@Tags			Stream API
-//	@Accept			json
-//	@Success		200
-//	@Failure		500	{object}	map[string]string
-//	@Router			/streams/qualities [get]
+//	@Summary	Get stream qualities.
+//	@Tags		Stream API
+//	@Accept		json
+//	@Success	200	{object}	QualitiesDTO		"List of available stream qualities"
+//	@Failure	500	{object}	errors.FiberError	"Internal Server Error"
+//	@Router		/streams/qualities [get]
 func (d *delivery) getQualities(ctx *fiber.Ctx) error {
 	var qualities []models.StreamQuality
 
 	err := viper.UnmarshalKey("streams.qualities", &qualities)
 	if err != nil {
 		d.logger.Error(err.Error())
-		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+		return ctx.Status(fiber.StatusInternalServerError).JSON(errors.NewFiberError(err.Error()))
 	}
 
 	resp := QualitiesDTO{Qualities: make([]QualityDTO, 0, len(qualities))}
@@ -52,18 +52,17 @@ func (d *delivery) getQualities(ctx *fiber.Ctx) error {
 
 // getStreamsInfo godoc
 //
-//	@Summary		Get stream descriptions.
-//	@Description	get stream descriptions
-//	@Tags			Stream API
-//	@Accept			json
-//	@Success		200
-//	@Failure		500	{object}	map[string]string
-//	@Router			/streams [get]
+//	@Summary	Get stream descriptions.
+//	@Tags		Stream API
+//	@Accept		json
+//	@Success	200	{object}	StreamsInfo			"List of available streams"
+//	@Failure	500	{object}	errors.FiberError	"Internal Server Error"
+//	@Router		/streams [get]
 func (d *delivery) getStreamsInfo(ctx *fiber.Ctx) error {
 	streams, err := d.useCase.GetStreamsInfo()
 	if err != nil {
 		d.logger.Error(err.Error())
-		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+		return ctx.Status(fiber.StatusInternalServerError).JSON(errors.NewFiberError(err.Error()))
 	}
 
 	return ctx.Status(fiber.StatusOK).JSON(StreamsInfo{Streams: streams})
