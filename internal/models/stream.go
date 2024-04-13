@@ -7,8 +7,19 @@ type StreamQuality struct {
 	PreferredPeakBitRate uint `mapstructure:"preferredPeakBitRate"`
 }
 
+// StreamDescription godoc
+//
+//	@Description	Stream description (name and content paths)
+//
+// swagger:model
 type StreamDescription struct {
-	Name         string `example:"San Francisco"                               json:"name,omitempty"`
-	PreviewPath  string `example:"/content/U2FuIEZyYW5jaXNjbw==/preview.png"   json:"previewPath,omitempty"`
+	// Stream name
+	// example: "San Francisco"
+	Name string `example:"San Francisco" json:"name,omitempty"`
+	// URL path to stream preview file
+	// example: "/content/U2FuIEZyYW5jaXNjbw==/preview.png"
+	PreviewPath string `example:"/content/U2FuIEZyYW5jaXNjbw==/preview.png" json:"previewPath,omitempty"`
+	// URL path to stream HLS playlist file
+	// example: "/content/U2FuIEZyYW5jaXNjbw==/playlist.m3u8"
 	PlaylistPath string `example:"/content/U2FuIEZyYW5jaXNjbw==/playlist.m3u8" json:"playlistPath,omitempty"`
 }

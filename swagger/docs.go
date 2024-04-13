@@ -115,17 +115,21 @@ const docTemplate = `{
     },
     "definitions": {
         "gitlab_teamdev_huds_su_bivi_backend_internal_models.StreamDescription": {
+            "description": "Stream description (name and content paths)",
             "type": "object",
             "properties": {
                 "name": {
+                    "description": "Stream name\nexample: \"San Francisco\"",
                     "type": "string",
                     "example": "San Francisco"
                 },
                 "playlistPath": {
+                    "description": "URL path to stream HLS playlist file\nexample: \"/content/U2FuIEZyYW5jaXNjbw==/playlist.m3u8\"",
                     "type": "string",
                     "example": "/content/U2FuIEZyYW5jaXNjbw==/playlist.m3u8"
                 },
                 "previewPath": {
+                    "description": "URL path to stream preview file\nexample: \"/content/U2FuIEZyYW5jaXNjbw==/preview.png\"",
                     "type": "string",
                     "example": "/content/U2FuIEZyYW5jaXNjbw==/preview.png"
                 }
@@ -140,9 +144,11 @@ const docTemplate = `{
             }
         },
         "internal_stream_delivery.QualitiesDTO": {
+            "description": "List of stream qualities (video height and bitrate)",
             "type": "object",
             "properties": {
                 "qualities": {
+                    "description": "List of stream qualities\nmin items: 1\nmax items: 3",
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/internal_stream_delivery.QualityDTO"
@@ -151,22 +157,27 @@ const docTemplate = `{
             }
         },
         "internal_stream_delivery.QualityDTO": {
+            "description": "Stream quality (video height and bitrate)",
             "type": "object",
             "properties": {
                 "height": {
+                    "description": "Video height (px)\nmin: 360\nmax: 1080\nexample: 720",
                     "type": "integer",
                     "example": 720
                 },
                 "preferredPeakBitRate": {
+                    "description": "Maximum bitrate of video in this quality (bytes per second)\nmin: 1400000\nmax: 8400000\nexample: 4200000",
                     "type": "integer",
                     "example": 4200000
                 }
             }
         },
         "internal_stream_delivery.StreamsInfo": {
+            "description": "Stream descriptions (names and content paths)",
             "type": "object",
             "properties": {
                 "streams": {
+                    "description": "List of stream descriptions\nmin items: 0",
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/gitlab_teamdev_huds_su_bivi_backend_internal_models.StreamDescription"
