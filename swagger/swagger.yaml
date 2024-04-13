@@ -4,21 +4,15 @@ definitions:
     description: Stream description (name and content paths)
     properties:
       name:
-        description: |-
-          Stream name
-          example: "San Francisco"
+        description: Stream name
         example: San Francisco
         type: string
       playlistPath:
-        description: |-
-          URL path to stream HLS playlist file
-          example: "/content/U2FuIEZyYW5jaXNjbw==/playlist.m3u8"
+        description: URL path to stream HLS playlist file
         example: /content/U2FuIEZyYW5jaXNjbw==/playlist.m3u8
         type: string
       previewPath:
-        description: |-
-          URL path to stream preview file
-          example: "/content/U2FuIEZyYW5jaXNjbw==/preview.png"
+        description: URL path to stream preview file
         example: /content/U2FuIEZyYW5jaXNjbw==/preview.png
         type: string
     type: object
@@ -47,7 +41,6 @@ definitions:
           Video height (px)
           min: 360
           max: 1080
-          example: 720
         example: 720
         type: integer
       preferredPeakBitRate:
@@ -55,7 +48,6 @@ definitions:
           Maximum bitrate of video in this quality (bytes per second)
           min: 1400000
           max: 8400000
-          example: 4200000
         example: 4200000
         type: integer
     type: object

@@ -11,12 +11,10 @@ type QualityDTO struct {
 	// Video height (px)
 	// min: 360
 	// max: 1080
-	// example: 720
 	Height uint `example:"720" json:"height,omitempty"`
 	// Maximum bitrate of video in this quality (bytes per second)
 	// min: 1400000
 	// max: 8400000
-	// example: 4200000
 	PreferredPeakBitrate uint `example:"4200000" json:"preferredPeakBitRate,omitempty"`
 }
 

@@ -119,17 +119,17 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "name": {
-                    "description": "Stream name\nexample: \"San Francisco\"",
+                    "description": "Stream name",
                     "type": "string",
                     "example": "San Francisco"
                 },
                 "playlistPath": {
-                    "description": "URL path to stream HLS playlist file\nexample: \"/content/U2FuIEZyYW5jaXNjbw==/playlist.m3u8\"",
+                    "description": "URL path to stream HLS playlist file",
                     "type": "string",
                     "example": "/content/U2FuIEZyYW5jaXNjbw==/playlist.m3u8"
                 },
                 "previewPath": {
-                    "description": "URL path to stream preview file\nexample: \"/content/U2FuIEZyYW5jaXNjbw==/preview.png\"",
+                    "description": "URL path to stream preview file",
                     "type": "string",
                     "example": "/content/U2FuIEZyYW5jaXNjbw==/preview.png"
                 }
@@ -161,12 +161,12 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "height": {
-                    "description": "Video height (px)\nmin: 360\nmax: 1080\nexample: 720",
+                    "description": "Video height (px)\nmin: 360\nmax: 1080",
                     "type": "integer",
                     "example": 720
                 },
                 "preferredPeakBitRate": {
-                    "description": "Maximum bitrate of video in this quality (bytes per second)\nmin: 1400000\nmax: 8400000\nexample: 4200000",
+                    "description": "Maximum bitrate of video in this quality (bytes per second)\nmin: 1400000\nmax: 8400000",
                     "type": "integer",
                     "example": 4200000
                 }
